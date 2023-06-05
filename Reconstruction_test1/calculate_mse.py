@@ -20,12 +20,7 @@ h0 = 0.08
 
 """ 0. build mesh """
 n_el = 16  # nb of electrodes
-use_customize_shape = False
-if use_customize_shape:
-    # Mesh shape is specified with fd parameter in the instantiation, e.g : fd=thorax
-    mesh_obj = mesh.create(n_el, h0=h0, fd=thorax)
-else:
-    mesh_obj = mesh.create(n_el, h0=h0)
+mesh_obj = mesh.create(n_el, h0=h0)
 
 """ 1. problem setup """
 anomaly = PyEITAnomaly_Circle(center=[0.5, 0.5], r=0.1, perm=10.0)
@@ -51,10 +46,11 @@ pts = mesh_obj.node
 tri = mesh_obj.element
 
 
-fig, axes = plt.subplots(2, 1, constrained_layout=True, figsize=(6, 9))
+fig, axes = plt.subplots(2, 2, constrained_layout=True, figsize=(12, 9))
 # original
-ax = axes[0]
+ax = axes[0,0]
 ax.axis("equal")
+print(ax.axis)
 ax.set_title(r"Input $\Delta$ Conductivities")
 delta_perm = np.real(mesh_new.perm - mesh_obj.perm)
 
@@ -62,7 +58,7 @@ im = ax.tripcolor(pts[:, 0], pts[:, 1], tri, delta_perm, shading="flat", edgecol
 # im = ax.tripcolor(pts[:, 0], pts[:, 1], tri, np.real(mesh_new.perm), shading="flat", edgecolors="black")
 # print(mesh_new.perm)
 # reconstructed
-ax1 = axes[1]
+ax1 = axes[1,0]
 im = ax1.tripcolor(pts[:, 0], pts[:, 1], tri, ds, edgecolors="black")
 ax1.set_title(r"Reconstituted $\Delta$ Conductivities")
 ax1.axis("equal")
